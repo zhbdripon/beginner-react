@@ -1,0 +1,70 @@
+<div id="root"></div>
+<script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+<script src="https://unpkg.com/prop-types@15.6.0/prop-types.js"></script>
+
+<script type="text/babel">
+
+    class NameForm extends React.Component {
+        state = {error: this.props.getErrorMessage('')}
+        handleSubmit = (event) => {
+            event.preventDefault()
+            // console.log({ target: event.target })
+            // console.log(event.target[0].value)
+            // console.log(event.target.elements.username.value)
+            const value = this.usernameNode.value
+
+            const error = this.props.getErrorMessage(value,)
+
+            if(error){
+                alert(`error ${error}`)
+            }else{
+                alert(`Success ${value}`)
+            }
+
+
+        }
+
+        handleChange = () =>{
+            const value = this.usernameNode.value
+            const error = this.props.getErrorMessage(value)
+            this.setState((state)=>({error:error}))
+        }
+
+        render() {
+            const {error} = this.state
+            return (
+                <form onSubmit={this.handleSubmit}>
+                    <label >
+                        Name:
+                        <input type="text" onChange={this.handleChange} ref={node => (this.usernameNode = node)} />
+                    </label>
+                    {error?<span style={{color:'red'}}>{error}</span>:null}
+                    <button type="submit" disabled={Boolean(error)}>Submit</button>
+                    
+                </form>
+            )
+        }
+    }
+
+    const element = (
+        <NameForm 
+            getErrorMessage={
+                value =>{
+                    if(value.length<3){
+                        return `value should be atleast 3 characters long`
+                    }
+                    if(!value.includes('s')){
+                        return `value should include s`
+                    }
+                    return null
+                    
+                }
+            }
+        />
+    )
+
+    const rootElement = document.getElementById('root')
+    ReactDOM.render(element, rootElement)
+</script>
